@@ -1,10 +1,86 @@
-(function($) {
+var months_key = {};
+months_key["Jan"] = '01';
+months_key["Feb"] = '02';
+months_key["Mar"] = '03';
+months_key["Apr"] = '04';
+months_key["May"] = '05';
+months_key["Jun"] = '06';
+months_key["Jul"] = '07';
+months_key["Aug"] = '08';
+months_key["Sep"] = '09';
+months_key["Oct"] = '10';
+months_key["Nov"] = '11';
+months_key["Dec"] = '12';
 
-	"use strict";
 
-	// Setup the calendar with the current dat
+// Given data for events in JSON format
+var event_data = {
+    "events": [
+    ]
+};
 
-// Initialize the calendar by appending the HTML dates
+const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+];
+
+
+
+$(document).ready(function(){
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = ("0" + (1 + date.getMonth())).slice(-2);
+    var day = ("0" + date.getDate()).slice(-2);
+    var fulldate = year + "-" + month + "-" + day;
+
+    const orderData = {
+        newdate : fulldate
+    };
+    $.ajax({
+        type: 'POST',
+        url : '/tts',
+        data:orderData,
+        success: function(data){
+            for(var i=0; i<data.length; i++) {
+                var indate = {
+                    "occasion": data[i]["occasion"],
+                    "invited_count": data[i]["invited_count"],
+                    "year": data[i]["years"],
+                    "month": data[i]["months"]+1,
+                    "day": data[i]["days"],
+                    "cancelled": data[i]["cancelled"]
+                };
+                event_data["events"].push(indate);
+            }
+        init_calendar(date);
+        },
+        error:function(){
+            init_calendar(date);
+        }
+    });
+
+
+    var date = new Date();
+    $(".right-button").click({date: date}, next_year);
+    $(".left-button").click({date: date}, prev_year);
+    $(".month").click({date: date}, month_click);
+    $("#add-button").click({date: date}, new_event);
+    $(".months-row").children().eq(date.getMonth()).addClass("active-month");
+
+});
+
+
+
 function init_calendar(date) {
     $(".tbody").empty();
     $(".events-container").empty();
@@ -20,7 +96,7 @@ function init_calendar(date) {
     // 35+firstDay is the number of date elements to be added to the dates table
     // 35 is from (7 days in a week) * (up to 5 rows of dates in a month)
     for(var i=0; i<35+first_day; i++) {
-        // Since some of the elements will be blank, 
+        // Since some of the elements will be blank,
         // need to calculate actual date from index
         var day = i-first_day+1;
         // If it is a sunday, make a new row
@@ -32,7 +108,7 @@ function init_calendar(date) {
         if(i < first_day || day > day_count) {
             var curr_date = $("<td class='table-date nil'>"+"</td>");
             row.append(curr_date);
-        }   
+        }
         else {
             var curr_date = $("<td class='table-date'>"+day+"</td>");
             var events = check_events(day, month+1, year);
@@ -58,7 +134,7 @@ function init_calendar(date) {
 function days_in_month(month, year) {
     var monthStart = new Date(year, month, 1);
     var monthEnd = new Date(year, month + 1, 1);
-    return (monthEnd - monthStart) / (1000 * 60 * 60 * 24);    
+    return (monthEnd - monthStart) / (1000 * 60 * 60 * 24);
 }
 
 // Event handler for when a date is clicked
@@ -78,6 +154,7 @@ function month_click(event) {
     $(".active-month").removeClass("active-month");
     $(this).addClass("active-month");
     var new_month = $(".month").index(this);
+
     date.setMonth(new_month);
     init_calendar(date);
 }
@@ -163,7 +240,6 @@ function show_events(events, month, day) {
     // Clear the dates container
     $(".events-container").empty();
     $(".events-container").show(250);
-    //console.log(event_data["events"]);
     // If there are no events for this date, notify the user
     if(events.length===0) {
         var event_card = $("<div class='event-card'></div>");
@@ -203,121 +279,3 @@ function check_events(day, month, year) {
     }
     return events;
 }
-
-// Given data for events in JSON format
-var event_data = {
-    "events": [
-    {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2020,
-        "month": 5,
-        "day": 10,
-        "cancelled": true
-    },
-    {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2020,
-        "month": 5,
-        "day": 10,
-        "cancelled": true
-    },
-        {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2020,
-        "month": 5,
-        "day": 10,
-        "cancelled": true
-    }
-    ]
-};
-
-const months = [ 
-    "January", 
-    "February", 
-    "March", 
-    "April", 
-    "May", 
-    "June", 
-    "July", 
-    "August", 
-    "September", 
-    "October", 
-    "November", 
-    "December" 
-];
-
-$(document).ready(function(){
-    var date = new Date();
-    var today = date.getDate();
-    // Set click handlers for DOM elements
-    $(".right-button").click({date: date}, next_year);
-    $(".left-button").click({date: date}, prev_year);
-    $(".month").click({date: date}, month_click);
-    $("#add-button").click({date: date}, new_event);
-    // Set current month as active
-    $(".months-row").children().eq(date.getMonth()).addClass("active-month");
-    init_calendar(date);
-    var events = check_events(today, date.getMonth()+1, date.getFullYear());
-    show_events(events, months[date.getMonth()], today);
-
-
-    var months_key = {};
-    months_key["Jan"] = '01';
-    months_key["Feb"] = '02';
-    months_key["Mar"] = '03';
-    months_key["Apr"] = '04';
-    months_key["May"] = '05';
-    months_key["Jun"] = '06';
-    months_key["Jul"] = '07';
-    months_key["Aug"] = '08';
-    months_key["Sep"] = '09';
-    months_key["Oct"] = '10';
-    months_key["Nov"] = '11';
-    months_key["Dec"] = '12';
-
-    var yearss = $('.year').text();
-    var monthsss = $('.active-month').text();
-
-
-
-    var date = new Date();
-    var year = date.getFullYear();
-    var month = ("0" + (1 + date.getMonth())).slice(-2);
-    var day = ("0" + date.getDate()).slice(-2);
-    var fulldate = year + "-" + month + "-" + day;
-
-
-    var date22 = new Date();
-    date22.setDate('20');
-    const orderData = {
-        newdate : fulldate
-    };
-    $.ajax({
-        type: 'POST',
-        url : '/tts',
-        data:orderData,
-        success: function(data){
-
-            data.forEach(function(elements) {
-                var indate = {
-                        "occasion": elements["occasion"],
-                        "invited_count": elements["invited_count"],
-                        "year": elements["years"],
-                        "month": elements["months"]+1,
-                        "day": elements["days"]
-                };
-               event_data["events"].push(indate);
-            });
-        },
-        error:function(){
-            console.log('실패');
-        }
-    });
-
-    console.log(event_data);
-    init_calendar(date);
-});
-})(jQuery);

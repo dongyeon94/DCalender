@@ -59,7 +59,7 @@ public class MainController {
 			appointmentDto.setMonths(calDate.get(Calendar.MONTH));
 			appointmentDto.setDays(calDate.get(Calendar.DATE));
 			appointmentDto.setOccasion(userTable.getAppointment());
-			appointmentDto.setInvited_count("0");
+			appointmentDto.setInvited_count(userTable.getId());
 			appointmentDto.setCancelled(false);
 
 			appointmentDtos.add(appointmentDto);

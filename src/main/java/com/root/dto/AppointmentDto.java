@@ -9,6 +9,6 @@ public class AppointmentDto {
     private int months;
     private int days;
     private String occasion;
-    private String invited_count;
+    private long invited_count;
     private boolean cancelled;
 }
