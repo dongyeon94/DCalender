@@ -96,5 +96,25 @@
 <script src="js/main.js"></script>
 </body>
 <script src="https://code.jquery.com/jquery-latest.js"></script>
+<script>
+function delete_line(id_value) {
+	var idid = id_value;
+	console.log(idid);
+	const orderData = {
+        ids : idid
+    };
+
+	$.ajax({
+        type: 'POST',
+        url : '/delete',
+        data:orderData,
+        success: function(data){
+        	location.reload();
+        },
+        error:function(){
+        }
+    });
+}
+</script>
 </html>
 

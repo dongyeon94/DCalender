@@ -60,7 +60,8 @@ $(document).ready(function(){
                     "month": data[i]["months"]+1,
                     "day": data[i]["days"],
                     "cancelled": data[i]["cancelled"],
-                    "tags": data[i]["tags"]
+                    "tags": data[i]["tags"],
+                    "ids" : data[i]["id"]
                 };
                 event_data["events"].push(indate);
             }
@@ -224,6 +225,31 @@ function new_event(event) {
             date.setDate(day);
             init_calendar(date);
         }
+
+
+        var year = date.getFullYear();
+        var month = ("0" + (1 + date.getMonth())).slice(-2);
+        var fulldate = year + "-" + month + "-" + day;
+        console.log("==========");
+        console.log(fulldate);
+        console.log("==========");
+
+        const orderData = {
+            newdate : fulldate,
+            tags : tags,
+            name : name,
+        };
+
+        $.ajax({
+                type: 'POST',
+                url : '/confirm',
+                data:orderData,
+                success: function(data){
+                },
+                error:function(){
+                }
+            });
+
     });
 
 }
@@ -258,15 +284,16 @@ function show_events(events, month, day) {
         // Go through and add each event as a card to the events container
         for(var i=0; i<events.length; i++) {
             var event_card = $("<div class='event-card'></div>");
-            var event_name = $("<div class='event-name'>"+events[i]["occasion"]+":</div>");
-            var event_count = $("<div class='event-count'>"+events[i]["tags"]+"</div>");
+            var event_name = $("<div class='event-name'>"+events[i]["tags"]+":</div>");
+            var event_count = $("<div class='event-count'>"+events[i]["occasion"]+"</div>");
+            var event_delete = $("<button onclick='delete_line(" + events[i]["ids"] + ")' class='btn btn-secondary' style='float:right;margin-right:5px'>삭제</button>");
             if(events[i]["cancelled"]===true) {
                 $(event_card).css({
                     "border-left": "10px solid #FF1744"
                 });
                 event_count = $("<div class='event-cancelled'>Cancelled</div>");
             }
-            $(event_card).append(event_name).append(event_count);
+            $(event_card).append(event_name).append(event_count).append(event_delete);
             $(".events-container").append(event_card);
         }
     }
@@ -307,7 +334,8 @@ function searchAppointment(year, month) {
                     "month": data[i]["months"]+1,
                     "day": data[i]["days"],
                     "cancelled": data[i]["cancelled"],
-                    "tags": data[i]["tags"]
+                    "tags": data[i]["tags"],
+                    "ids" : data[i]["id"]
                 };
                 event_data["events"].push(indate);
             }

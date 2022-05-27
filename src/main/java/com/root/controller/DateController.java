@@ -58,6 +58,28 @@ public class DateController {
 		return "redirect:/";
 	}
 
+	@PostMapping("/confirm")
+	@ResponseBody
+	public String appiontmentConfirm(@DateTimeFormat(pattern = "yyyy-MM-dd") Date newdate, String tags, String name) {
+		UserTable userTable = new UserTable();
+		userTable.setReservation(newdate);
+		userTable.setAppointment(name);
+		if("동연".equals(tags)) {
+			userTable.setTags(NameTag.동연);
+		}
+		else {
+			userTable.setTags(NameTag.소현);
+		}
+		userRepo.save(userTable);
+		return "200";
+	}
+
+	@PostMapping("/delete")
+	@ResponseBody
+	public String deleteAppointment(long ids) {
+		userRepo.deleteById(ids);
+		return "20";
+	}
 
 	@PostMapping("/search")
 	@ResponseBody
@@ -79,6 +101,7 @@ public class DateController {
 			calDate.setTime(userTable.getReservation());
 
 			AppointmentDto appointmentDto = new AppointmentDto();
+			appointmentDto.setId(userTable.getId());
 			appointmentDto.setYears(calDate.get(Calendar.YEAR));
 			appointmentDto.setMonths(calDate.get(Calendar.MONTH));
 			appointmentDto.setDays(calDate.get(Calendar.DATE));
@@ -89,7 +112,6 @@ public class DateController {
 
 			appointmentDtos.add(appointmentDto);
 		}
-		System.out.println("gogogo");
 		return appointmentDtos;
 	}
 }

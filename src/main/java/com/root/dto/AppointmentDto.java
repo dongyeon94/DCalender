@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Getter @Setter
 public class AppointmentDto {
+    private long id;
     private int years;
     private int months;
     private int days;
