@@ -89,7 +89,7 @@
 			<button onclick="te()">1111111111111111</button>
 		</div>
 		<div>
-			<input type="date" class="newdate">
+			<input type="date" id="newdate" class="newdate">
 			<button onclick="ff()">tetsdfasdfasdfasdf</button>
 		</div>
 	</section>
@@ -99,7 +99,10 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-latest.js"></script>
+<script>
+ document.getElementById('newdate').value = new Date().toISOString().substring(0, 10);
+</script>
 <script>
 var months_key = {};
 months_key["Jan"] = 01;
@@ -145,6 +148,7 @@ function ff() {
     var month = ("0" + (1 + date.getMonth())).slice(-2);
     var day = ("0" + date.getDate()).slice(-2);
 	var fulldate = year + "-" + (month-1) + "-" + day;
+
 
 	const orderData = {
         newdate : fulldate

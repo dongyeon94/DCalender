@@ -2,76 +2,10 @@
 
 	"use strict";
 
-	// Setup the calendar with the current date
-$(document).ready(function(){
-    var date = new Date();
-    var today = date.getDate();
-    // Set click handlers for DOM elements
-    $(".right-button").click({date: date}, next_year);
-    $(".left-button").click({date: date}, prev_year);
-    $(".month").click({date: date}, month_click);
-    $("#add-button").click({date: date}, new_event);
-    // Set current month as active
-    $(".months-row").children().eq(date.getMonth()).addClass("active-month");
-    init_calendar(date);
-    var events = check_events(today, date.getMonth()+1, date.getFullYear());
-    show_events(events, months[date.getMonth()], today);
-
-
-    var months_key = {};
-    months_key["Jan"] = '01';
-    months_key["Feb"] = '02';
-    months_key["Mar"] = '03';
-    months_key["Apr"] = '04';
-    months_key["May"] = '05';
-    months_key["Jun"] = '06';
-    months_key["Jul"] = '07';
-    months_key["Aug"] = '08';
-    months_key["Sep"] = '09';
-    months_key["Oct"] = '10';
-    months_key["Nov"] = '11';
-    months_key["Dec"] = '12';
-
-    var yearss = $('.year').text();
-    var monthsss = $('.active-month').text();
-    console.log(yearss);
-    console.log(months_key);
-    console.log("[" + monthsss + " : " + months_key[monthsss] + "]");
-
-
-    var date = new Date();
-        var year = date.getFullYear();
-        var month = ("0" + (1 + date.getMonth())).slice(-2);
-        var day = ("0" + date.getDate()).slice(-2);
-    	var fulldate = year + "-" + month + "-" + day;
-
-    	const orderData = {
-            newdate : fulldate
-        };
-
-        console.log(fulldate);
-
-    <!--	const orderData = {-->
-    <!--        newdate : $('.newdate').val()-->
-    <!--    };-->
-
-    	$.ajax({
-    		type: 'POST',
-    		url : '/tts',
-    		data:orderData,
-    		success: function(data){
-    			console.log(data);
-    		},
-    		error:function(){
-    			console.log('실패');
-    		}
-    })
-
-});
+	// Setup the calendar with the current dat
 
 // Initialize the calendar by appending the HTML dates
 function init_calendar(date) {
-    console.log("***** ::" + date)
     $(".tbody").empty();
     $(".events-container").empty();
     var calendar_days = $(".tbody");
@@ -205,7 +139,6 @@ function new_event(event) {
         }
         else {
             $("#dialog").hide(250);
-            //console.log("new event");
             new_event_json(name, count, date, day);
             date.setDate(day);
             init_calendar(date);
@@ -297,65 +230,6 @@ var event_data = {
         "month": 5,
         "day": 10,
         "cancelled": true
-    },
-    {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2020,
-        "month": 5,
-        "day": 10
-    },
-        {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2020,
-        "month": 5,
-        "day": 10,
-        "cancelled": true
-    },
-    {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2020,
-        "month": 5,
-        "day": 10
-    },
-        {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2020,
-        "month": 5,
-        "day": 10,
-        "cancelled": true
-    },
-    {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2020,
-        "month": 5,
-        "day": 10
-    },
-        {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2020,
-        "month": 5,
-        "day": 10,
-        "cancelled": true
-    },
-    {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2020,
-        "month": 5,
-        "day": 10
-    },
-    {
-        "occasion": " Test Event",
-        "invited_count": 120,
-        "year": 2020,
-        "month": 5,
-        "day": 11
     }
     ]
 };
@@ -375,6 +249,75 @@ const months = [
     "December" 
 ];
 
+$(document).ready(function(){
+    var date = new Date();
+    var today = date.getDate();
+    // Set click handlers for DOM elements
+    $(".right-button").click({date: date}, next_year);
+    $(".left-button").click({date: date}, prev_year);
+    $(".month").click({date: date}, month_click);
+    $("#add-button").click({date: date}, new_event);
+    // Set current month as active
+    $(".months-row").children().eq(date.getMonth()).addClass("active-month");
+    init_calendar(date);
+    var events = check_events(today, date.getMonth()+1, date.getFullYear());
+    show_events(events, months[date.getMonth()], today);
 
 
+    var months_key = {};
+    months_key["Jan"] = '01';
+    months_key["Feb"] = '02';
+    months_key["Mar"] = '03';
+    months_key["Apr"] = '04';
+    months_key["May"] = '05';
+    months_key["Jun"] = '06';
+    months_key["Jul"] = '07';
+    months_key["Aug"] = '08';
+    months_key["Sep"] = '09';
+    months_key["Oct"] = '10';
+    months_key["Nov"] = '11';
+    months_key["Dec"] = '12';
+
+    var yearss = $('.year').text();
+    var monthsss = $('.active-month').text();
+
+
+
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = ("0" + (1 + date.getMonth())).slice(-2);
+    var day = ("0" + date.getDate()).slice(-2);
+    var fulldate = year + "-" + month + "-" + day;
+
+
+    var date22 = new Date();
+    date22.setDate('20');
+    const orderData = {
+        newdate : fulldate
+    };
+    $.ajax({
+        type: 'POST',
+        url : '/tts',
+        data:orderData,
+        success: function(data){
+
+            data.forEach(function(elements) {
+                var indate = {
+                        "occasion": elements["occasion"],
+                        "invited_count": elements["invited_count"],
+                        "year": elements["years"],
+                        "month": elements["months"]+1,
+                        "day": elements["days"]
+                };
+               event_data["events"].push(indate);
+            });
+        },
+        error:function(){
+            console.log('실패');
+        }
+    });
+
+    console.log(event_data);
+    init_calendar(date);
+});
 })(jQuery);

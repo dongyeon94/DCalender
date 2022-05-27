@@ -2,6 +2,7 @@ package com.root.controller;
 
 import com.root.domain.UserRepository;
 import com.root.domain.UserTable;
+import com.root.dto.AppointmentDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -9,10 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -38,16 +36,35 @@ public class MainController {
 
 	@PostMapping("/tts")
 	@ResponseBody
-	public String test(@DateTimeFormat(pattern = "yyyy-MM-dd") Date newdate) {
-		System.out.println("==========================================");
-		System.out.println(newdate);
-		List<UserTable> userTableList = userRepository.findByReservationBetween(newdate, newdate);
-		for(UserTable ob: userTableList) {
-			System.out.println(ob.getReservation());
-			System.out.println(ob.getAppointment());
+	public List<AppointmentDto> test(@DateTimeFormat(pattern = "yyyy-MM-dd") Date newdate) {
+		Calendar scal = Calendar.getInstance();
+		scal.setTime(newdate);
+		scal.set(Calendar.DATE,1);
+		Date sta = scal.getTime();
+
+
+		Calendar ecal = Calendar.getInstance();
+		ecal.setTime(newdate);
+		ecal.set(Calendar.DATE,ecal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		Date ens = ecal.getTime();
+
+		List<UserTable> userTableList = userRepository.findByReservationBetween(sta, ens);
+		List<AppointmentDto> appointmentDtos = new ArrayList<>();
+		for(UserTable userTable: userTableList) {
+			Calendar calDate = Calendar.getInstance();
+			calDate.setTime(userTable.getReservation());
+
+			AppointmentDto appointmentDto = new AppointmentDto();
+			appointmentDto.setYears(calDate.get(Calendar.YEAR));
+			appointmentDto.setMonths(calDate.get(Calendar.MONTH));
+			appointmentDto.setDays(calDate.get(Calendar.DATE));
+			appointmentDto.setOccasion(userTable.getAppointment());
+			appointmentDto.setInvited_count("0");
+			appointmentDto.setCancelled(false);
+
+			appointmentDtos.add(appointmentDto);
 		}
-		System.out.println("==========================================");
-		return "200";
+		return appointmentDtos;
 	}
 
 }
