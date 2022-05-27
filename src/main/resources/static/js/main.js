@@ -46,9 +46,10 @@ $(document).ready(function(){
     const orderData = {
         newdate : fulldate
     };
+    event_data["events"] = [];
     $.ajax({
         type: 'POST',
-        url : '/tts',
+        url : '/search',
         data:orderData,
         success: function(data){
             for(var i=0; i<data.length; i++) {
@@ -58,7 +59,8 @@ $(document).ready(function(){
                     "year": data[i]["years"],
                     "month": data[i]["months"]+1,
                     "day": data[i]["days"],
-                    "cancelled": data[i]["cancelled"]
+                    "cancelled": data[i]["cancelled"],
+                    "tags": data[i]["tags"]
                 };
                 event_data["events"].push(indate);
             }
@@ -155,6 +157,8 @@ function month_click(event) {
     $(this).addClass("active-month");
     var new_month = $(".month").index(this);
 
+    var years = $("#label").text();
+    searchAppointment(years, new_month);
     date.setMonth(new_month);
     init_calendar(date);
 }
@@ -204,8 +208,8 @@ function new_event(event) {
     $("#ok-button").unbind().click({date: event.data.date}, function() {
         var date = event.data.date;
         var name = $("#name").val().trim();
-        //var count = parseInt($("#count").val().trim());
-        var count = '0';
+        var tags = $("#tags").val();
+        var count = "0";
         var day = parseInt($(".active-date").html());
         // Basic form validation
         if(name.length === 0) {
@@ -216,21 +220,23 @@ function new_event(event) {
         }
         else {
             $("#dialog").hide(250);
-            new_event_json(name, count, date, day);
+            new_event_json(name, count, date, day,tags);
             date.setDate(day);
             init_calendar(date);
         }
     });
+
 }
 
 // Adds a json event to event_data
-function new_event_json(name, count, date, day) {
+function new_event_json(name, count, date, day, tags) {
     var event = {
         "occasion": name,
         "invited_count": count,
         "year": date.getFullYear(),
         "month": date.getMonth()+1,
-        "day": day
+        "day": day,
+        "tags" : tags
     };
     event_data["events"].push(event);
 }
@@ -253,7 +259,7 @@ function show_events(events, month, day) {
         for(var i=0; i<events.length; i++) {
             var event_card = $("<div class='event-card'></div>");
             var event_name = $("<div class='event-name'>"+events[i]["occasion"]+":</div>");
-            var event_count = $("<div class='event-count'>"+events[i]["invited_count"]+" Invited</div>");
+            var event_count = $("<div class='event-count'>"+events[i]["tags"]+"</div>");
             if(events[i]["cancelled"]===true) {
                 $(event_card).css({
                     "border-left": "10px solid #FF1744"
@@ -278,4 +284,37 @@ function check_events(day, month, year) {
             }
     }
     return events;
+}
+
+function searchAppointment(year, month) {
+    var date = new Date(year, month, 1);
+    var fulldate = year + "-" + (month + 1) + "-01";
+
+    const orderData = {
+        newdate : fulldate
+    };
+    event_data["events"] = [];
+    $.ajax({
+        type: 'POST',
+        url : '/search',
+        data:orderData,
+        success: function(data){
+            for(var i=0; i<data.length; i++) {
+                var indate = {
+                    "occasion": data[i]["occasion"],
+                    "invited_count": data[i]["invited_count"],
+                    "year": data[i]["years"],
+                    "month": data[i]["months"]+1,
+                    "day": data[i]["days"],
+                    "cancelled": data[i]["cancelled"],
+                    "tags": data[i]["tags"]
+                };
+                event_data["events"].push(indate);
+            }
+            init_calendar(date);
+        },
+        error:function(){
+        init_calendar(date);
+        }
+    });
 }

@@ -71,10 +71,14 @@
 				        <h2 class="dialog-header"> Add New Event </h2>
 				        <form class="form" id="form">
 				          <div class="form-container" align="center">
+							<select id="tags">
+							  	<option value="동연">동연</option>
+							  	<option value="소현">소현</option>
+					  		</select><br/>
 				            <label class="form-label" id="valueFromMyButton" for="name">Event name</label>
 				            <input class="input" type="text" id="name" maxlength="36">
 <!--				            <label class="form-label" id="valueFromMyButton" for="count">Number of people to invite</label>-->
-<!--				            <input class="input" type="number" id="count" min="0" max="1000000" maxlength="7">-->
+<!--				            <input class="input" type="text" id="count" min="0" max="1000000" maxlength="7">-->
 				            <input type="button" value="Cancel" class="button" id="cancel-button">
 				            <input type="button" value="OK" class="button button-white" id="ok-button">
 				          </div>
@@ -84,14 +88,6 @@
 				</div>
 			</div>
 		</div>
-		<div>
-			<button onclick="test()">asdfasdfasdfasdfasdf</button>
-			<button onclick="te()">1111111111111111</button>
-		</div>
-		<div>
-			<input type="date" id="newdate" class="newdate">
-			<button onclick="ff()">tetsdfasdfasdfasdf</button>
-		</div>
 	</section>
 
 <script src="js/jquery.min.js"></script>
@@ -100,8 +96,5 @@
 <script src="js/main.js"></script>
 </body>
 <script src="https://code.jquery.com/jquery-latest.js"></script>
-<script>
- document.getElementById('newdate').value = new Date().toISOString().substring(0, 10);
-</script>
 </html>
 

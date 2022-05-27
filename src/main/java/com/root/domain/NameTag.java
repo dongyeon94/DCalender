@@ -1,5 +1,5 @@
 package com.root.domain;
 
 public enum NameTag {
-	DY,SH
+	동연,소현
 }

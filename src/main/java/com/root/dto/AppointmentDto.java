@@ -11,4 +11,5 @@ public class AppointmentDto {
     private String occasion;
     private long invited_count;
     private boolean cancelled;
+    private String tags;
 }

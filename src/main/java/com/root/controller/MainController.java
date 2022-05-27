@@ -15,7 +15,9 @@ import java.util.*;
 @Controller
 @RequiredArgsConstructor
 public class MainController {
-	
+
+	private final UserRepository userRepository;
+
 	@GetMapping("/")
 	public String mains() {
 		return"index";
@@ -23,7 +25,6 @@ public class MainController {
 
 
 
-	private final UserRepository userRepository;
 	@PostMapping("/test")
 	@ResponseBody
 	public String sres() {
@@ -36,12 +37,11 @@ public class MainController {
 
 	@PostMapping("/tts")
 	@ResponseBody
-	public List<AppointmentDto> test(@DateTimeFormat(pattern = "yyyy-MM-dd") Date newdate) {
+	public List<AppointmentDto> searchAppointment(@DateTimeFormat(pattern = "yyyy-MM-dd") Date newdate) {
 		Calendar scal = Calendar.getInstance();
 		scal.setTime(newdate);
 		scal.set(Calendar.DATE,1);
 		Date sta = scal.getTime();
-
 
 		Calendar ecal = Calendar.getInstance();
 		ecal.setTime(newdate);
