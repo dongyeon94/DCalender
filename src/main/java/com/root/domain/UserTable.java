@@ -18,8 +18,7 @@ public class UserTable {
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date reservation;
-	
-	@Lob	
+
 	private String appointment; 
 
 	@Enumerated(EnumType.STRING)
