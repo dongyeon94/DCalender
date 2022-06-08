@@ -4,12 +4,16 @@ import com.root.domain.UserRepository;
 import com.root.domain.UserTable;
 import com.root.dto.AppointmentDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.jni.Local;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Controller
@@ -19,7 +23,17 @@ public class MainController {
 	private final UserRepository userRepository;
 
 	@GetMapping("/")
-	public String mains() {
+	public String mains(Model model) {
+		LocalDate starts = LocalDate.of(2021, 4, 8);
+		LocalDate today = LocalDate.now();
+
+		long times = ChronoUnit.DAYS.between(starts, today);
+
+		int plus = (int) (times % 100);
+		LocalDate nextDay = today.plusDays(99 - plus);
+
+		model.addAttribute("daycounts","+ " + (times+1));
+		model.addAttribute("nextdays",nextDay);
 		return"index";
 	}
 
