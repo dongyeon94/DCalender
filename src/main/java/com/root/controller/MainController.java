@@ -31,9 +31,11 @@ public class MainController {
 
 		int plus = (int) (times % 100);
 		LocalDate nextDay = today.plusDays(99 - plus);
+		long nextCount = times + (99 - plus) + 1;
 
 		model.addAttribute("daycounts","+ " + (times+1));
-		model.addAttribute("nextdays",nextDay);
+		model.addAttribute("nextdays", "[+ " + (nextCount) + "]  " + nextDay);
+
 		return"index";
 	}
 
